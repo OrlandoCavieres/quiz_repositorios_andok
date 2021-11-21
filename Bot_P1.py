@@ -8,6 +8,16 @@ def get_url():
     return requests.get('https://random.dog/woof.json').json()['url']
 
 
+def get_image_url():
+    allowed_extension = ['jpg', 'jpeg', 'png']
+    file_extension = ''
+    url = ''
+    while file_extension not in allowed_extension:
+        url = get_url()
+        file_extension = re.search("([^.]*)$", url()).group(1).lower()
+    return url
+
+
 @run_async
 def bop(update, context):
     chat_id = update.message.chat_id
