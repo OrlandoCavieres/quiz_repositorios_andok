@@ -1,9 +1,9 @@
-import telegram
-from telegram import InlineKeyboardButton, InlineKeyboardMarkup, Poll
-from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, CallbackQueryHandler, PollHandler
-import time
 import random
+import time
 
+import telegram
+from telegram import Poll
+from telegram.ext import Updater, CommandHandler, PollHandler
 
 questions = [
     [
@@ -34,15 +34,61 @@ questions = [
     [
         '¿Cuál es la forma correcta de crear un nuevo tag en un commit?',
         ['git new-tag [nombre] [commit]', 'git tag [commitID]', 'git tag -l [nombre]'],
-        [1], ['Realiza una copia local del respositorio']
+        [1],
+        ['Realiza una copia local del respositorio']
     ],
-    ['6', ['water', 'ice', 'wine'], [0, 2], 'wine'],
-    # ['7', ['water', 'ice', 'wine'], [0, 2], 'wine'],
-    # ['8', ['water', 'ice', 'wine'], [0, 2], 'wine'],
-    # ['9', ['water', 'ice', 'wine'], [0, 2], 'wine'],
-    # ['10', ['water', 'ice', 'wine'], [0, 2], 'wine'],
-    # ['11', ['water', 'ice', 'wine'], [0, 2], 'wine'],
-    # ['12', ['water', 'ice', 'wine'], [0, 2], 'wine'],
+    [
+        '¿Cómo puedes arreglar un commit realizado de forma errónea?',
+        ['Con git commit --fix', 'Con git commit --edit [nuevo mensaje]', 'Con git commit --ammend'],
+        [2],
+        ['Con git commit --ammend']
+    ],
+    [
+        'Git es un sistema de control de versiones de tipo:',
+        ['Distribuido', 'Localizado', 'Centralizado'],
+        [0],
+        ['Distribuido']
+    ],
+    [
+        '¿Dónde se encuentran en git los archivos a los que se le puede realizar commit?',
+        ['En el directorio de trabajo', 'En el área de stage indexados', 'No hay barrera de donde pueden encontrarse'],
+        [1],
+        ['En el área de stage indexados']
+    ],
+    [
+        '¿Cuál de los siguientes corresponde a un enunciado falso sobre git?',
+        ['La operación pull copia los cambios desde un repositorio local a uno remoto',
+         'Por default, git tiene una rama master o main',
+         'Git necesita de acceso a Internet solo cuando debe publicar u obtener datos de algun repositorio'],
+        [0],
+        ['La operación pull copia los cambios desde un repositorio local a uno remoto']
+    ],
+    [
+        '¿Qué Git Hook sería más adecuado emplear para corroborar que los tests se encuentran funcionando bien a pesar '
+        'de los cambios?',
+        ['Pre-push',
+         'Pre-commit',
+         'Pre-receive'],
+        [1],
+        ['Pre-commit']
+    ],
+    [
+        'Si deseo copiar un repositorio sin afectar el repositorio original, debo realizar un...',
+        ['git clone',
+         'git init',
+         'git fork'],
+        [2],
+        ['git fork']
+    ],
+    [
+        '¿Cualés de los siguientes son posibles usos de git cherry pick? Seleccione 2 alternativas',
+        ['Introducir un commit en particular en una rama dentro del repositorio a otra rama',
+         'Traerse commits específicos de una rama de mantenimiento o sin uso a una rama de desarrollo',
+         'Trasladar de a poco todos los commits de otra rama a la actual'],
+        [0, 1],
+        ['Introducir un commit en particular en una rama dentro del repositorio a otra rama',
+         'Traerse commits específicos de una rama de mantenimiento o sin uso a una rama de desarrollo']
+    ]
 ]
 
 count = 0
@@ -156,28 +202,22 @@ def add_text_message(update, context, message):
 
 def get_answer(update):
     answers = update.poll.options
-
     ret = ''
     for answer in answers:
         if answer.voter_count == 1:
             ret = answer.text
-
     return ret
 
 
 def is_answer_correct(update):
     answers = update.poll.options
-
     ret = False
     counter = 0
-
     for answer in answers:
         if answer.voter_count == 1 and update.poll.correct_option_id == counter:
             ret = True
             break
-
         counter += 1
-
     return ret
 
 
