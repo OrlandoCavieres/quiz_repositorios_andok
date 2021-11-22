@@ -189,6 +189,7 @@ def poll_handler(update, context):
 
     if count == 6:
         add_text_message(update, context, f"Tu nota final corresponde a {correct_answers + 1}")
+        add_text_message(update, context, f"Hasta pronto! Si quieres iniciar otro quiz, escribe /start")
         count = 0
         correct_answers = 0
         ya_preguntadas = []
